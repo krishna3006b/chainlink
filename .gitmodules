@@ -1,0 +1,6 @@
+[submodule "vaultai/lib/openzeppelin-contracts"]
+	path = vaultai/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "vaultai/lib/chainlink"]
+	path = vaultai/lib/chainlink
+	url = https://github.com/smartcontractkit/chainlink
