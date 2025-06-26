@@ -1,0 +1,4 @@
+{
+  "target": "contracts",
+  "filter_paths": ["node_modules", "lib"]
+}
