@@ -1,8 +1,8 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\contracts\\AIRiskManager.sol": {
-      "lastModificationDate": 1750925086857,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\contracts\\AIRiskManager.sol": {
+      "lastModificationDate": 1750952632605,
       "contentHash": "d12a17939d6f56079f9ec8d77ef2fce3",
       "sourceName": "contracts/AIRiskManager.sol",
       "solcConfig": {
@@ -37,8 +37,8 @@
         "AIRiskManager"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\contracts\\CCIPRouter.sol": {
-      "lastModificationDate": 1750925086857,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\contracts\\CCIPRouter.sol": {
+      "lastModificationDate": 1750952632606,
       "contentHash": "c81c21dfc88ab1068ccc0d60baecdfaf",
       "sourceName": "contracts/CCIPRouter.sol",
       "solcConfig": {
@@ -73,8 +73,8 @@
         "CCIPRouter"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\contracts\\MockRealEstate.sol": {
-      "lastModificationDate": 1750924556132,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\contracts\\MockRealEstate.sol": {
+      "lastModificationDate": 1750952632608,
       "contentHash": "b6958be94d4df942cdbf2326d26495a6",
       "sourceName": "contracts/MockRealEstate.sol",
       "solcConfig": {
@@ -112,8 +112,8 @@
         "MockRealEstate"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\access\\Ownable.sol": {
-      "lastModificationDate": 1750925982229,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\access\\Ownable.sol": {
+      "lastModificationDate": 1751018750550,
       "contentHash": "d3c790edc9ccf808a17c5a6cd13614fd",
       "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
       "solcConfig": {
@@ -150,8 +150,8 @@
         "Ownable"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\ERC721.sol": {
-      "lastModificationDate": 1750925981235,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\ERC721.sol": {
+      "lastModificationDate": 1751018749356,
       "contentHash": "a7951c81f7037d558c6d2f220b0cb38e",
       "sourceName": "@openzeppelin/contracts/token/ERC721/ERC721.sol",
       "solcConfig": {
@@ -194,8 +194,8 @@
         "ERC721"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\utils\\Context.sol": {
-      "lastModificationDate": 1750925980459,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\utils\\Context.sol": {
+      "lastModificationDate": 1751018748341,
       "contentHash": "67bfbc07588eb8683b3fd8f6f909563e",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
@@ -230,8 +230,8 @@
         "Context"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\utils\\Strings.sol": {
-      "lastModificationDate": 1750925982417,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\utils\\Strings.sol": {
+      "lastModificationDate": 1751018750746,
       "contentHash": "13dbc135f563c72a11b1cf4fbb5fb284",
       "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
       "solcConfig": {
@@ -270,46 +270,8 @@
         "Strings"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\interfaces\\draft-IERC6093.sol": {
-      "lastModificationDate": 1750925980709,
-      "contentHash": "267d92fe4de67b1bdb3302c08f387dbf",
-      "sourceName": "@openzeppelin/contracts/interfaces/draft-IERC6093.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "IERC1155Errors",
-        "IERC20Errors",
-        "IERC721Errors"
-      ]
-    },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\utils\\introspection\\ERC165.sol": {
-      "lastModificationDate": 1750925981013,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\utils\\introspection\\ERC165.sol": {
+      "lastModificationDate": 1751018749089,
       "contentHash": "7c03c1e37c3dc24eafb76dc2b8a5c3a6",
       "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
       "solcConfig": {
@@ -346,8 +308,46 @@
         "ERC165"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721.sol": {
-      "lastModificationDate": 1750925982023,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\interfaces\\draft-IERC6093.sol": {
+      "lastModificationDate": 1751018748671,
+      "contentHash": "267d92fe4de67b1bdb3302c08f387dbf",
+      "sourceName": "@openzeppelin/contracts/interfaces/draft-IERC6093.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC1155Errors",
+        "IERC20Errors",
+        "IERC721Errors"
+      ]
+    },
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721.sol": {
+      "lastModificationDate": 1751018750333,
       "contentHash": "1fdc621cd6747e8985e11fc76ce74511",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
       "solcConfig": {
@@ -384,46 +384,8 @@
         "IERC721"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\extensions\\IERC721Metadata.sol": {
-      "lastModificationDate": 1750925982059,
-      "contentHash": "12c206f185cb951213799561fdcaa40d",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../IERC721.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "IERC721Metadata"
-      ]
-    },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\utils\\ERC721Utils.sol": {
-      "lastModificationDate": 1750925981336,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\utils\\ERC721Utils.sol": {
+      "lastModificationDate": 1751018749464,
       "contentHash": "e12814872b31b0af06106796a6621b04",
       "sourceName": "@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol",
       "solcConfig": {
@@ -461,10 +423,10 @@
         "ERC721Utils"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\utils\\math\\SafeCast.sol": {
-      "lastModificationDate": 1750925982352,
-      "contentHash": "2adca1150f58fc6f3d1f0a0f22ee7cca",
-      "sourceName": "@openzeppelin/contracts/utils/math/SafeCast.sol",
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\extensions\\IERC721Metadata.sol": {
+      "lastModificationDate": 1751018750369,
+      "contentHash": "12c206f185cb951213799561fdcaa40d",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
@@ -489,16 +451,18 @@
           }
         }
       },
-      "imports": [],
+      "imports": [
+        "../IERC721.sol"
+      ],
       "versionPragmas": [
         "^0.8.20"
       ],
       "artifacts": [
-        "SafeCast"
+        "IERC721Metadata"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\utils\\math\\Math.sol": {
-      "lastModificationDate": 1750925982159,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\utils\\math\\Math.sol": {
+      "lastModificationDate": 1751018750475,
       "contentHash": "5ec781e33d3a9ac91ffdc83d94420412",
       "sourceName": "@openzeppelin/contracts/utils/math/Math.sol",
       "solcConfig": {
@@ -536,8 +500,44 @@
         "Math"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\utils\\math\\SignedMath.sol": {
-      "lastModificationDate": 1750925982388,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\utils\\math\\SafeCast.sol": {
+      "lastModificationDate": 1751018750681,
+      "contentHash": "2adca1150f58fc6f3d1f0a0f22ee7cca",
+      "sourceName": "@openzeppelin/contracts/utils/math/SafeCast.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "SafeCast"
+      ]
+    },
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\utils\\math\\SignedMath.sol": {
+      "lastModificationDate": 1751018750715,
       "contentHash": "ae3528afb8bdb0a7dcfba5b115ee8074",
       "sourceName": "@openzeppelin/contracts/utils/math/SignedMath.sol",
       "solcConfig": {
@@ -574,8 +574,8 @@
         "SignedMath"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\utils\\Panic.sol": {
-      "lastModificationDate": 1750925982280,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\utils\\Panic.sol": {
+      "lastModificationDate": 1751018750599,
       "contentHash": "2133dc13536b4a6a98131e431fac59e1",
       "sourceName": "@openzeppelin/contracts/utils/Panic.sol",
       "solcConfig": {
@@ -610,8 +610,8 @@
         "Panic"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\utils\\introspection\\IERC165.sol": {
-      "lastModificationDate": 1750925981787,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\utils\\introspection\\IERC165.sol": {
+      "lastModificationDate": 1751018749994,
       "contentHash": "bf0119eb2a570f219729ff38b6cd1df8",
       "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
       "solcConfig": {
@@ -646,8 +646,8 @@
         "IERC165"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721Receiver.sol": {
-      "lastModificationDate": 1750925982078,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721Receiver.sol": {
+      "lastModificationDate": 1751018750388,
       "contentHash": "729ce0904eb533489ffcc3bfe91237d4",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
       "solcConfig": {
@@ -682,8 +682,8 @@
         "IERC721Receiver"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\contracts\\RWARegistry.sol": {
-      "lastModificationDate": 1750924556134,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\contracts\\RWARegistry.sol": {
+      "lastModificationDate": 1750952632608,
       "contentHash": "590bffb9a35dd99b22743b19264ab2b4",
       "sourceName": "contracts/RWARegistry.sol",
       "solcConfig": {
@@ -718,9 +718,9 @@
         "RWARegistry"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\contracts\\VaultCore.sol": {
-      "lastModificationDate": 1750925086875,
-      "contentHash": "ed61721d916b40d4897efccf422d975e",
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\contracts\\VaultCore.sol": {
+      "lastModificationDate": 1751027786317,
+      "contentHash": "01697bdc6d62129295206aba4f764b7d",
       "sourceName": "contracts/VaultCore.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -747,6 +747,8 @@
         }
       },
       "imports": [
+        "@chainlink/contracts/src/v0.8/vrf/interfaces/VRFCoordinatorV2Interface.sol",
+        "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol",
         "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol",
         "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol"
       ],
@@ -759,8 +761,44 @@
         "VaultCore"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@chainlink\\contracts\\src\\v0.8\\automation\\AutomationCompatible.sol": {
-      "lastModificationDate": 1750925983720,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@chainlink\\contracts\\src\\v0.8\\vrf\\interfaces\\VRFCoordinatorV2Interface.sol": {
+      "lastModificationDate": 1751018756527,
+      "contentHash": "c4963e3862ffee2974cc634689745531",
+      "sourceName": "@chainlink/contracts/src/v0.8/vrf/interfaces/VRFCoordinatorV2Interface.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "VRFCoordinatorV2Interface"
+      ]
+    },
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@chainlink\\contracts\\src\\v0.8\\automation\\AutomationCompatible.sol": {
+      "lastModificationDate": 1751018752091,
       "contentHash": "5e080eff2df83e7d1ec3b981fddeb1ce",
       "sourceName": "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol",
       "solcConfig": {
@@ -798,8 +836,8 @@
         "AutomationCompatible"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@chainlink\\contracts\\src\\v0.8\\shared\\interfaces\\AggregatorV3Interface.sol": {
-      "lastModificationDate": 1750925983554,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@chainlink\\contracts\\src\\v0.8\\shared\\interfaces\\AggregatorV3Interface.sol": {
+      "lastModificationDate": 1751018751879,
       "contentHash": "64a3f906dc7696aa3c9fa8454b673be7",
       "sourceName": "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol",
       "solcConfig": {
@@ -834,8 +872,44 @@
         "AggregatorV3Interface"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@chainlink\\contracts\\src\\v0.8\\automation\\AutomationBase.sol": {
-      "lastModificationDate": 1750925983715,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@chainlink\\contracts\\src\\v0.8\\vrf\\VRFConsumerBaseV2.sol": {
+      "lastModificationDate": 1751018756460,
+      "contentHash": "06f8ab6bd949cea1abd42940d7965d65",
+      "sourceName": "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "VRFConsumerBaseV2"
+      ]
+    },
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@chainlink\\contracts\\src\\v0.8\\automation\\AutomationBase.sol": {
+      "lastModificationDate": 1751018752088,
       "contentHash": "b53171d7e10f5036ecc73fac5d28028b",
       "sourceName": "@chainlink/contracts/src/v0.8/automation/AutomationBase.sol",
       "solcConfig": {
@@ -870,8 +944,8 @@
         "AutomationBase"
       ]
     },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\node_modules\\@chainlink\\contracts\\src\\v0.8\\automation\\interfaces\\AutomationCompatibleInterface.sol": {
-      "lastModificationDate": 1750925983729,
+    "C:\\Users\\tanej\\OneDrive\\Desktop\\vault\\chainlink\\vaultai\\node_modules\\@chainlink\\contracts\\src\\v0.8\\automation\\interfaces\\AutomationCompatibleInterface.sol": {
+      "lastModificationDate": 1751018752103,
       "contentHash": "5cb8d69e4e9ed7ff601180e31372d0ca",
       "sourceName": "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol",
       "solcConfig": {
@@ -904,47 +978,6 @@
       ],
       "artifacts": [
         "AutomationCompatibleInterface"
-      ]
-    },
-    "C:\\Users\\varsh\\OneDrive\\Desktop\\chainlink\\vaultai\\contracts\\VaultCoreUSDC.sol": {
-      "lastModificationDate": 1750935063734,
-      "contentHash": "b81651b18e46c2e450cc3bbc98838808",
-      "sourceName": "contracts/VaultCoreUSDC.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol",
-        "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.19"
-      ],
-      "artifacts": [
-        "IAIRiskManager",
-        "ICCIPRouter",
-        "VaultCore"
       ]
     }
   }
