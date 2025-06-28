@@ -2,7 +2,10 @@ import json
 
 def handler(request):
     try:
-        data = request.get_json()
+        # Read and parse JSON from request body
+        body = request.body.decode()
+        data = json.loads(body)
+
         credit_score = data.get("credit_score")
         income = data.get("income")
         asset_value = data.get("asset_value")
