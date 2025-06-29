@@ -1,19 +1,13 @@
-import json
+# api/score.py
 
-def handler(request):
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+@app.route("/api/score", methods=["POST"])
+def score():
     try:
-        # Try to read raw body
-        raw_body = request.body.decode("utf-8")
-        
-        # Log body content (optional debugging)
-        print("Raw body:", raw_body)
-
-        # Try to parse it
-        data = json.loads(raw_body)
-
-        # Log parsed data
-        print("Parsed data:", data)
-
+        data = request.get_json()
         credit_score = data.get("credit_score")
         income = data.get("income")
         asset_value = data.get("asset_value")
@@ -28,16 +22,7 @@ def handler(request):
         else:
             tier = "C"
 
-        return {
-            "statusCode": 200,
-            "headers": {"Content-Type": "application/json"},
-            "body": json.dumps({"risk_tier": tier})
-        }
-
+        return jsonify({"risk_tier": tier})
+    
     except Exception as e:
-        print("Error:", str(e))
-        return {
-            "statusCode": 500,
-            "headers": {"Content-Type": "application/json"},
-            "body": json.dumps({"error": str(e)})
-        }
+        return jsonify({"error": str(e)}), 500
