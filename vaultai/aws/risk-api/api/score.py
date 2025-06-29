@@ -1,18 +1,10 @@
+# vaultai/api/score.py
+
 import json
 
-def handler(request):
+async def handler(request):
     try:
-        # Try to read raw body
-        raw_body = request.body.decode("utf-8")
-        
-        # Log body content (optional debugging)
-        print("Raw body:", raw_body)
-
-        # Try to parse it
-        data = json.loads(raw_body)
-
-        # Log parsed data
-        print("Parsed data:", data)
+        data = await request.json()
 
         credit_score = data.get("credit_score")
         income = data.get("income")
@@ -35,7 +27,6 @@ def handler(request):
         }
 
     except Exception as e:
-        print("Error:", str(e))
         return {
             "statusCode": 500,
             "headers": {"Content-Type": "application/json"},
