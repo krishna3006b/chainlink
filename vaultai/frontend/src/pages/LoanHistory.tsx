@@ -46,9 +46,11 @@ const LoanHistory = () => {
         VaultCoreABI,
         provider
       );
-      // Try to fetch first 100 loans (loanId: 0..99)
+      // Dynamically fetch the latest loanId and scan backwards for all user loans
+      const latestLoanId = Number(await vault.loanId());
+      const maxScan = Math.max(latestLoanId, 100); // scan at least 100, or up to latestLoanId
       const fetchedLoans = [];
-      for (let i = 0; i < 100; i++) {
+      for (let i = maxScan - 1; i >= 0; i--) {
         try {
           const loan = await vault.loans(i);
           if (loan.borrower && loan.borrower.toLowerCase() === address.toLowerCase()) {

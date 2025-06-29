@@ -32,6 +32,10 @@ const LoanApproval = () => {
 
 
 
+  // Enhanced UX: fetch and show risk tier and new loan details after approval
+  const [userRiskTier, setUserRiskTier] = useState<string | null>(null);
+  const [newLoanDetails, setNewLoanDetails] = useState<any | null>(null);
+
   const handleApproval = async () => {
     if (!assetId || !amount) {
       toast.error('Please enter both asset ID and amount.');
@@ -39,6 +43,8 @@ const LoanApproval = () => {
     }
     setIsProcessing(true);
     setTxHash(null);
+    setUserRiskTier(null);
+    setNewLoanDetails(null);
     try {
       if (!(await ensureCorrectChain(43113, FUJI_PARAMS))) {
         setIsProcessing(false);
@@ -47,6 +53,15 @@ const LoanApproval = () => {
       if (!window.ethereum) throw new Error('MetaMask not detected');
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
+      // Fetch and show user risk tier before approval
+      try {
+        const riskManager = new ethers.Contract(CONTRACT_ADDRESSES.AIRiskManager, require('../abi/AIRiskManager.json'), provider);
+        const riskTierNum = await riskManager.getRiskScore(await signer.getAddress());
+        const riskTierMap = ['NONE', 'C', 'B', 'A'];
+        setUserRiskTier(riskTierMap[Number(riskTierNum)] || 'NONE');
+      } catch (e) {
+        setUserRiskTier('Unknown');
+      }
       const vault = new ethers.Contract(CONTRACT_ADDRESSES.VaultCore, VaultCoreABI, signer);
       // Simulate call
       let parsedAmount;
@@ -66,11 +81,31 @@ const LoanApproval = () => {
       }
       // Send real tx
       const tx = await vault.getFunction('receiveLoanApproval')(assetId, parsedAmount);
-      await tx.wait();
+      const receipt = await tx.wait();
       setTxHash(tx.hash);
       setLoanApproved(true);
       setCurrentStep(4);
       toast.success('Loan approved and funds transferred via CCIP!');
+      // Fetch and show new loan details (find latest loan for user)
+      try {
+        // Find the latest loanId by scanning backwards (assume user can only have a few outstanding loans)
+        const maxLoans = 20;
+        let found = false;
+        for (let i = 0; i < maxLoans; i++) {
+          const loan = await vault.loans((await vault.loanId()) - 1n - BigInt(i));
+          if (loan.borrower && loan.borrower.toLowerCase() === (await signer.getAddress()).toLowerCase()) {
+            setNewLoanDetails({
+              id: (await vault.loanId()) - 1n - BigInt(i),
+              amount: ethers.formatUnits(loan.amount, 18),
+              repaid: loan.repaid,
+              riskTier: ['NONE', 'C', 'B', 'A'][Number(loan.riskTier)] || 'NONE',
+            });
+            found = true;
+            break;
+          }
+        }
+        if (!found) setNewLoanDetails(null);
+      } catch {}
     } catch (e) {
       toast.error('Failed to approve loan: ' + (e?.reason || e?.message || e));
     }
@@ -145,7 +180,7 @@ const LoanApproval = () => {
           </div>
           <Progress value={loanApproved ? 100 : 50} className="mb-2" />
           <p className="text-sm text-muted-foreground text-center">
-            {loanApproved ? 'Process Complete' : 'Processing on Ethereum Sepolia'}
+            {loanApproved ? 'Process Complete' : 'Processing on Fuji'}
           </p>
         </CardContent>
       </Card>
@@ -184,7 +219,7 @@ const LoanApproval = () => {
             </CardContent>
           </Card>
 
-          {/* Approval Action (new, contract-driven) */}
+          {/* Approval Action (new, contract-driven) with risk tier display */}
           {!loanApproved && (
             <Card>
               <CardHeader>
@@ -194,6 +229,12 @@ const LoanApproval = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                {userRiskTier !== null && (
+                  <div className="mb-2">
+                    <span className="font-semibold">Your Risk Tier: </span>
+                    <span className={`inline-block px-2 py-1 rounded text-xs ml-2 ${userRiskTier === 'A' ? 'bg-green-100 text-green-700' : userRiskTier === 'B' ? 'bg-yellow-100 text-yellow-700' : userRiskTier === 'C' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-700'}`}>{userRiskTier}</span>
+                  </div>
+                )}
                 <div className="p-4 border-l-4 border-blue-500 bg-blue-50">
                   <div className="flex items-center gap-2 mb-2">
                     <CheckCircle className="h-5 w-5 text-blue-600" />
@@ -225,7 +266,7 @@ const LoanApproval = () => {
             </Card>
           )}
 
-          {/* Success State */}
+          {/* Success State with new loan details */}
           {loanApproved && (
             <Card className="border-green-200 bg-green-50">
               <CardContent className="p-6">
@@ -237,9 +278,17 @@ const LoanApproval = () => {
                     <h3 className="text-xl font-bold text-green-900">Loan Approved!</h3>
                     <p className="text-green-800">Funds successfully transferred to Avalanche Fuji</p>
                   </div>
-                  <div className="bg-white p-4 rounded-lg">
+                  <div className="bg-white p-4 rounded-lg space-y-2">
                     <p className="text-sm font-mono">Transaction Hash:</p>
                     <p className="text-xs font-mono text-muted-foreground">{txHash || 'N/A'}</p>
+                    {newLoanDetails && (
+                      <>
+                        <p className="text-sm font-mono">Loan ID: <span className="font-semibold">{newLoanDetails.id.toString()}</span></p>
+                        <p className="text-sm font-mono">Amount: <span className="font-semibold">{newLoanDetails.amount} AVAX</span></p>
+                        <p className="text-sm font-mono">Risk Tier: <span className="font-semibold">{newLoanDetails.riskTier}</span></p>
+                        <p className="text-sm font-mono">Status: <span className="font-semibold">{newLoanDetails.repaid ? 'Repaid' : 'Active'}</span></p>
+                      </>
+                    )}
                   </div>
                 </div>
               </CardContent>
