@@ -17,12 +17,18 @@ import {
   Clock
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { ethers } from 'ethers';
+import { ensureCorrectChain, FUJI_PARAMS } from '../utils/chain';
+import AIRiskManagerABI from '../abi/AIRiskManager.json';
+import { CONTRACT_ADDRESSES } from '../abi/addresses';
 
 const RiskAssessment = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [riskScore, setRiskScore] = useState<string | null>(null);
   const [analysisComplete, setAnalysisComplete] = useState(false);
-  
+  const [isSaving, setIsSaving] = useState(false);
+  const [onChainRisk, setOnChainRisk] = useState<string | null>(null);
+
   const [borrowerData, setBorrowerData] = useState({
     credit_score: '',
     income: '',
@@ -97,6 +103,118 @@ const RiskAssessment = () => {
       status: parseInt(borrowerData.asset_value) >= 300000 ? 'good' : parseInt(borrowerData.asset_value) >= 100000 ? 'medium' : 'poor'
     }
   ];
+
+  // Helper: map risk tier letter to uint8 for contract
+  const riskTierToUint = (tier: string) => {
+    switch (tier) {
+      case 'A': return 3;
+      case 'B': return 2;
+      case 'C': return 1;
+      default: return 0;
+    }
+  };
+
+  // Helper: map uint8 to risk tier letter
+  const uintToRiskTier = (val: number) => {
+    switch (val) {
+      case 3: return 'A';
+      case 2: return 'B';
+      case 1: return 'C';
+      default: return null;
+    }
+  };
+
+  // Fetch on-chain risk score for connected user
+  const fetchOnChainRisk = async () => {
+    try {
+      if (!window.ethereum) return;
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const riskManager = new ethers.Contract(CONTRACT_ADDRESSES.AIRiskManager, AIRiskManagerABI, provider);
+      const score = await riskManager.getRiskScore(await signer.getAddress());
+      setOnChainRisk(uintToRiskTier(Number(score)));
+    } catch {}
+  };
+
+  // Save risk score on-chain with validation
+  const handleSaveOnChain = async () => {
+    if (!riskScore) {
+      toast.error('No risk score to save.');
+      return;
+    }
+    // Only allow A, B, or C
+    if (!['A', 'B', 'C'].includes(riskScore)) {
+      toast.error('Invalid risk score. Only A, B, or C are allowed.');
+      console.error('Attempted to save invalid risk score:', riskScore);
+      return;
+    }
+    const riskUint = riskTierToUint(riskScore);
+    if (![1, 2, 3].includes(riskUint)) {
+      toast.error('Invalid risk score value. Only 1, 2, or 3 are allowed.');
+      console.error('Attempted to save invalid risk score value:', riskUint);
+      return;
+    }
+    setIsSaving(true);
+    try {
+      if (!(await ensureCorrectChain(43113, FUJI_PARAMS))) {
+        setIsSaving(false);
+        return;
+      }
+      if (!window.ethereum) throw new Error('MetaMask not detected');
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const userAddress = await signer.getAddress();
+      const network = await provider.getNetwork();
+      console.log('Frontend debug:', { userAddress, riskUint, riskScore, network });
+      toast.info(`Network: ${network.name} (${network.chainId}), Account: ${userAddress}`);
+
+      const riskManager = new ethers.Contract(CONTRACT_ADDRESSES.AIRiskManager, AIRiskManagerABI, signer);
+
+      // Show current on-chain risk score
+      let currentScore = null;
+      try {
+        currentScore = await riskManager.getRiskScore(userAddress);
+        toast.info(`Current on-chain risk score: ${currentScore} (uint8)`);
+      } catch (e) {
+        toast.error('Could not fetch current on-chain risk score.');
+      }
+      if (Number(currentScore) === riskUint) {
+        toast.info('This risk score is already set on-chain.');
+        setIsSaving(false);
+        return;
+      }
+
+      // Try callStatic to simulate the transaction
+      try {
+        await riskManager.getFunction('setRiskScore').staticCall(userAddress, riskUint);
+      } catch (simError) {
+        toast.error('Simulation failed: ' + (simError?.reason || simError?.message || simError));
+        console.error('Simulation error:', simError);
+        setIsSaving(false);
+        return;
+      }
+
+      // Send the real transaction
+      const tx = await riskManager.getFunction('setRiskScore')(userAddress, riskUint);
+      await tx.wait();
+      toast.success('Risk score saved on-chain!');
+      fetchOnChainRisk();
+    } catch (e: any) {
+      toast.error('Failed to save risk score: ' + (e?.reason || e?.message || e));
+      console.error('Error saving risk score on-chain:', e);
+    }
+    setIsSaving(false);
+  };
+
+  // Fetch on-chain risk score when analysis is complete or on mount
+  useEffect(() => {
+    if (analysisComplete) fetchOnChainRisk();
+  }, [analysisComplete]);
+
+  useEffect(() => {
+    fetchOnChainRisk();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <div className="p-6 space-y-6">
@@ -223,6 +341,37 @@ const RiskAssessment = () => {
                       </div>
                     </div>
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+          {/* Save Risk Score On-Chain Button & Status */}
+          {analysisComplete && riskScore && (
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  Save Risk Score On-Chain
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex flex-col items-center space-y-2">
+                  <Button onClick={handleSaveOnChain} disabled={isSaving || !['A','B','C'].includes(riskScore)} className="w-full max-w-xs" size="lg">
+                    {isSaving ? (
+                      <>
+                        <Clock className="h-4 w-4 mr-2 animate-spin" />
+                        Saving to Blockchain...
+                      </>
+                    ) : (
+                      <>Save Risk Score On-Chain</>
+                    )}
+                  </Button>
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="text-sm text-green-700">On-chain risk score: <b>{onChainRisk ? `Tier ${onChainRisk}` : 'Not set'}</b></span>
+                    <Button variant="outline" size="sm" onClick={fetchOnChainRisk} disabled={isSaving}>
+                      Refresh
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>

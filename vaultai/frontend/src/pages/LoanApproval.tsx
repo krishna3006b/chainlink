@@ -1,4 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { ethers } from 'ethers';
+import { ensureCorrectChain, FUJI_PARAMS } from '../utils/chain';
+import VaultCoreABI from '../abi/VaultCore.json';
+import { CONTRACT_ADDRESSES } from '../abi/addresses';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -22,33 +26,64 @@ const LoanApproval = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [loanApproved, setLoanApproved] = useState(false);
+  const [assetId, setAssetId] = useState<string>('');
+  const [amount, setAmount] = useState<string>('');
+  const [txHash, setTxHash] = useState<string | null>(null);
+
+
 
   const handleApproval = async () => {
+    if (!assetId || !amount) {
+      toast.error('Please enter both asset ID and amount.');
+      return;
+    }
     setIsProcessing(true);
-    
-    // Simulate cross-chain approval process
-    await new Promise(resolve => setTimeout(resolve, 4000));
-    
+    setTxHash(null);
+    try {
+      if (!(await ensureCorrectChain(43113, FUJI_PARAMS))) {
+        setIsProcessing(false);
+        return;
+      }
+      if (!window.ethereum) throw new Error('MetaMask not detected');
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const vault = new ethers.Contract(CONTRACT_ADDRESSES.VaultCore, VaultCoreABI, signer);
+      // Simulate call
+      let parsedAmount;
+      try {
+        parsedAmount = ethers.parseUnits(amount, 18);
+      } catch {
+        toast.error('Invalid amount format.');
+        setIsProcessing(false);
+        return;
+      }
+      try {
+        await vault.getFunction('receiveLoanApproval').staticCall(assetId, parsedAmount);
+      } catch (simError) {
+        toast.error('Simulation failed: ' + (simError?.reason || simError?.message || simError));
+        setIsProcessing(false);
+        return;
+      }
+      // Send real tx
+      const tx = await vault.getFunction('receiveLoanApproval')(assetId, parsedAmount);
+      await tx.wait();
+      setTxHash(tx.hash);
+      setLoanApproved(true);
+      setCurrentStep(4);
+      toast.success('Loan approved and funds transferred via CCIP!');
+    } catch (e) {
+      toast.error('Failed to approve loan: ' + (e?.reason || e?.message || e));
+    }
     setIsProcessing(false);
-    setLoanApproved(true);
-    setCurrentStep(4);
-    toast.success('Loan approved and funds transferred via CCIP!');
   };
 
-  const loanDetails = {
-    assetValue: 500000,
-    loanAmount: 350000,
-    interestRate: 6.5,
-    term: 24,
-    riskTier: 'A',
-    collateralRatio: 142.86
-  };
+
 
   const crossChainSteps = [
     { id: 1, title: 'Risk Assessment', chain: 'Ethereum', status: 'completed' },
-    { id: 2, title: 'Loan Approval', chain: 'Ethereum', status: 'current' },
-    { id: 3, title: 'CCIP Transfer', chain: 'Cross-Chain', status: 'pending' },
-    { id: 4, title: 'Fund Delivery', chain: 'Avalanche', status: 'pending' },
+    { id: 2, title: 'Loan Approval', chain: 'Ethereum', status: loanApproved ? 'completed' : 'current' },
+    { id: 3, title: 'CCIP Transfer', chain: 'Cross-Chain', status: loanApproved ? 'completed' : 'pending' },
+    { id: 4, title: 'Fund Delivery', chain: 'Avalanche', status: loanApproved ? 'completed' : 'pending' },
   ];
 
   return (
@@ -126,106 +161,51 @@ const LoanApproval = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="overview">Overview</TabsTrigger>
-                  <TabsTrigger value="terms">Terms</TabsTrigger>
-                  <TabsTrigger value="collateral">Collateral</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="overview" className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 border rounded-lg">
-                      <p className="text-sm text-muted-foreground">Loan Amount</p>
-                      <p className="text-2xl font-bold">${loanDetails.loanAmount.toLocaleString()}</p>
-                    </div>
-                    <div className="p-4 border rounded-lg">
-                      <p className="text-sm text-muted-foreground">Asset Value</p>
-                      <p className="text-2xl font-bold">${loanDetails.assetValue.toLocaleString()}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="p-4 border rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-muted-foreground">Risk Assessment</span>
-                      <Badge className="bg-green-100 text-green-800">Tier {loanDetails.riskTier}</Badge>
-                    </div>
-                    <p className="text-sm">Excellent creditworthiness - Approved for best rates</p>
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="terms" className="space-y-4">
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center p-3 border rounded-lg">
-                      <span>Interest Rate</span>
-                      <span className="font-semibold">{loanDetails.interestRate}% APR</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 border rounded-lg">
-                      <span>Loan Term</span>
-                      <span className="font-semibold">{loanDetails.term} months</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 border rounded-lg">
-                      <span>Monthly Payment</span>
-                      <span className="font-semibold">$15,847</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 border rounded-lg">
-                      <span>Total Interest</span>
-                      <span className="font-semibold">$30,328</span>
-                    </div>
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="collateral" className="space-y-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-semibold mb-2">Collateralized Asset</h4>
-                    <p className="text-sm text-muted-foreground mb-3">Downtown Commercial Property</p>
-                    <div className="flex justify-between text-sm">
-                      <span>Collateral Ratio:</span>
-                      <span className="font-semibold">{loanDetails.collateralRatio}%</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Liquidation Threshold:</span>
-                      <span className="font-semibold">110%</span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-4 border rounded-lg bg-blue-50">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Zap className="h-4 w-4 text-blue-600" />
-                      <span className="font-semibold text-blue-900">Chainlink Automation</span>
-                    </div>
-                    <p className="text-sm text-blue-800">
-                      Automated liquidation monitoring ensures loan health and protects both parties
-                    </p>
-                  </div>
-                </TabsContent>
-              </Tabs>
+              <div className="mb-4 space-y-4">
+                <label className="block font-medium">Asset ID</label>
+                <input
+                  type="number"
+                  className="w-full border rounded p-2"
+                  value={assetId}
+                  onChange={e => setAssetId(e.target.value)}
+                  disabled={isProcessing || loanApproved}
+                  placeholder="Enter asset ID (uint256)"
+                />
+                <label className="block font-medium mt-4">Amount (AVAX)</label>
+                <input
+                  type="number"
+                  className="w-full border rounded p-2"
+                  value={amount}
+                  onChange={e => setAmount(e.target.value)}
+                  disabled={isProcessing || loanApproved}
+                  placeholder="Enter amount (e.g. 1.5)"
+                />
+              </div>
             </CardContent>
           </Card>
 
-          {/* Approval Action */}
+          {/* Approval Action (new, contract-driven) */}
           {!loanApproved && (
             <Card>
               <CardHeader>
                 <CardTitle>Loan Approval</CardTitle>
                 <CardDescription>
-                  Review terms and approve for cross-chain fund delivery
+                  Enter asset ID and amount, then approve for cross-chain fund delivery
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="p-4 border-l-4 border-green-500 bg-green-50">
+                <div className="p-4 border-l-4 border-blue-500 bg-blue-50">
                   <div className="flex items-center gap-2 mb-2">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
-                    <span className="font-semibold text-green-900">Pre-Approved</span>
+                    <CheckCircle className="h-5 w-5 text-blue-600" />
+                    <span className="font-semibold text-blue-900">Ready for Approval</span>
                   </div>
-                  <p className="text-sm text-green-800">
-                    Risk assessment completed. Loan meets all approval criteria.
+                  <p className="text-sm text-blue-800">
+                    Enter your asset ID and desired loan amount, then approve to execute the cross-chain transfer.
                   </p>
                 </div>
-                
                 <Button 
                   onClick={handleApproval}
-                  disabled={isProcessing}
+                  disabled={isProcessing || !assetId || !amount}
                   className="w-full"
                   size="lg"
                 >
@@ -259,7 +239,7 @@ const LoanApproval = () => {
                   </div>
                   <div className="bg-white p-4 rounded-lg">
                     <p className="text-sm font-mono">Transaction Hash:</p>
-                    <p className="text-xs font-mono text-muted-foreground">0x742d35Cc6634C0532925a3b8D401FbF9DeD4316c</p>
+                    <p className="text-xs font-mono text-muted-foreground">{txHash || 'N/A'}</p>
                   </div>
                 </div>
               </CardContent>
@@ -362,4 +342,40 @@ const LoanApproval = () => {
   );
 };
 
-export default LoanApproval;
+// Add a simple error boundary wrapper for this page
+import React from 'react';
+
+class LoanApprovalErrorBoundary extends React.Component<any, { hasError: boolean; error: any }> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error: any, errorInfo: any) {
+    // You can log errorInfo to an error reporting service here
+    // eslint-disable-next-line no-console
+    console.error('LoanApproval error boundary:', error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-8 text-center text-red-600">
+          <h2 className="text-2xl font-bold mb-4">Something went wrong in Loan Approval</h2>
+          <pre className="bg-red-100 p-4 rounded text-left overflow-x-auto text-xs">{String(this.state.error)}</pre>
+          <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded" onClick={() => window.location.reload()}>Reload Page</button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+export default function LoanApprovalWithBoundary() {
+  return (
+    <LoanApprovalErrorBoundary>
+      <LoanApproval />
+    </LoanApprovalErrorBoundary>
+  );
+}

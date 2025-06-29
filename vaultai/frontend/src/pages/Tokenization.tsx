@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { ethers, BrowserProvider } from 'ethers';
+import { ensureCorrectChain, SEPOLIA_PARAMS } from '../utils/chain';
 import RWARegistryABI from '../abi/RWARegistry.json';
 import MockRealEstateABI from '../abi/MockRealEstate.json';
 import { CONTRACT_ADDRESSES } from '../abi/addresses';
@@ -39,9 +40,16 @@ const Tokenization = () => {
   });
 
   // Register asset and mint NFT using ethers v6
+  const [mintedTokenId, setMintedTokenId] = useState<string | null>(null);
+  const [registeredAssetId, setRegisteredAssetId] = useState<string | null>(null);
+
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
+      if (!(await ensureCorrectChain(11155111, SEPOLIA_PARAMS))) {
+        setIsLoading(false);
+        return;
+      }
       if (!window.ethereum) throw new Error('MetaMask not detected');
       const provider = new BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
@@ -57,13 +65,20 @@ const Tokenization = () => {
         ethers.parseUnits(formData.value || '0', 0)
       );
       const receipt1 = await tx1.wait();
-      // Get assetId from event or fallback
+      // Try to get assetId from event logs
       let assetId = null;
       if (receipt1 && receipt1.logs && receipt1.logs.length > 0) {
-        // Try to parse event log for assetId
-        const log = receipt1.logs[0];
-        if (log.args && log.args.id) assetId = log.args.id;
+        for (const log of receipt1.logs) {
+          try {
+            // Try to decode log for assetId (assume event AssetRegistered(address,uint256))
+            if (log.topics && log.topics.length > 1) {
+              assetId = BigInt(log.topics[2] || log.topics[1]).toString();
+              break;
+            }
+          } catch {}
+        }
       }
+      setRegisteredAssetId(assetId);
       toast.success('Asset registered on-chain!');
 
       // Mint NFT on MockRealEstate
@@ -73,7 +88,21 @@ const Tokenization = () => {
         signer
       );
       const tx2 = await mockRealEstate.mint(await signer.getAddress());
-      await tx2.wait();
+      const receipt2 = await tx2.wait();
+      // Try to get tokenId from event logs
+      let tokenId = null;
+      if (receipt2 && receipt2.logs && receipt2.logs.length > 0) {
+        for (const log of receipt2.logs) {
+          try {
+            // Try to decode log for tokenId (assume event Transfer(address,address,uint256))
+            if (log.topics && log.topics.length > 2) {
+              tokenId = BigInt(log.topics[3]).toString();
+              break;
+            }
+          } catch {}
+        }
+      }
+      setMintedTokenId(tokenId);
       toast.success('NFT minted successfully!');
 
       setStep(4);
@@ -298,8 +327,10 @@ const Tokenization = () => {
                     <p className="text-muted-foreground">Your RWA token has been created on Ethereum Sepolia</p>
                   </div>
                   <div className="bg-muted p-4 rounded-lg">
-                    <p className="text-sm font-mono">Token Address:</p>
-                    <p className="font-mono text-sm">0x742d35Cc6634C0532925a3b8D</p>
+                    <p className="text-sm font-mono">Registered Asset ID:</p>
+                    <p className="font-mono text-sm">{registeredAssetId || 'N/A'}</p>
+                    <p className="text-sm font-mono mt-2">Minted NFT Token ID:</p>
+                    <p className="font-mono text-sm">{mintedTokenId || 'N/A'}</p>
                   </div>
                 </div>
               )}

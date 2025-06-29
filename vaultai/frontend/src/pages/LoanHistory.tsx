@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { ethers, BrowserProvider } from 'ethers';
+import { ensureCorrectChain, FUJI_PARAMS } from '../utils/chain';
 import VaultCoreABI from '../abi/VaultCore.json';
 import { CONTRACT_ADDRESSES } from '../abi/addresses';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,50 +26,61 @@ const LoanHistory = () => {
   const [selectedLoan, setSelectedLoan] = useState<string | null>(null);
   const [loans, setLoans] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [userAddress, setUserAddress] = useState<string>('');
+
+  // Fetch loans function, now exported for refresh
+  const fetchLoans = async () => {
+    setLoading(true);
+    try {
+      if (!(await ensureCorrectChain(43113, FUJI_PARAMS))) {
+        setLoading(false);
+        return;
+      }
+      if (!window.ethereum) throw new Error('MetaMask not detected');
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const address = await signer.getAddress();
+      setUserAddress(address);
+      const vault = new ethers.Contract(
+        CONTRACT_ADDRESSES.VaultCore,
+        VaultCoreABI,
+        provider
+      );
+      // Try to fetch first 100 loans (loanId: 0..99)
+      const fetchedLoans = [];
+      for (let i = 0; i < 100; i++) {
+        try {
+          const loan = await vault.loans(i);
+          if (loan.borrower && loan.borrower.toLowerCase() === address.toLowerCase()) {
+            fetchedLoans.push({
+              id: `LOAN${i.toString().padStart(3, '0')}`,
+              loanAmount: Number(loan.amount) / 1e18,
+              currentBalance: loan.repaid ? 0 : Number(loan.amount) / 1e18,
+              status: loan.repaid ? 'Completed' : 'Active',
+              riskTier: ['C', 'B', 'A'][loan.riskTier - 1] || 'C',
+              // The following fields are static/demo, as not available on-chain:
+              interestRate: 'N/A',
+              healthScore: 'N/A',
+              nextPayment: 'N/A',
+              paymentAmount: 'N/A',
+              collateralRatio: 'N/A',
+              chain: 'Avalanche',
+              txHash: '',
+              assetName: 'Asset',
+            });
+          }
+        } catch {}
+      }
+      setLoans(fetchedLoans);
+    } catch (err) {
+      setLoans([]);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const fetchLoans = async () => {
-      setLoading(true);
-      try {
-        if (!window.ethereum) throw new Error('MetaMask not detected');
-        const provider = new BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const vault = new ethers.Contract(
-          CONTRACT_ADDRESSES.VaultCore,
-          VaultCoreABI,
-          provider
-        );
-        // For demo, try to fetch first 5 loans (loanId: 0..4)
-        const fetchedLoans = [];
-        for (let i = 0; i < 5; i++) {
-          try {
-            const loan = await vault.loans(i);
-            if (loan.borrower !== ethers.ZeroAddress) {
-              fetchedLoans.push({
-                id: `LOAN${i.toString().padStart(3, '0')}`,
-                loanAmount: Number(loan.amount),
-                currentBalance: loan.repaid ? 0 : Number(loan.amount),
-                interestRate: 6.5, // Demo static
-                status: loan.repaid ? 'Completed' : 'Active',
-                healthScore: 90, // Demo static
-                nextPayment: 'N/A',
-                paymentAmount: 0,
-                riskTier: ['C', 'B', 'A'][loan.riskTier - 1] || 'C',
-                collateralRatio: 120, // Demo static
-                chain: 'Avalanche', // Demo static
-                txHash: '',
-                assetName: 'Asset', // Demo static
-              });
-            }
-          } catch {}
-        }
-        setLoans(fetchedLoans);
-      } catch (err) {
-        setLoans([]);
-      }
-      setLoading(false);
-    };
     fetchLoans();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const liquidationAlerts = [
@@ -98,10 +110,10 @@ const LoanHistory = () => {
   };
 
   const totalStats = {
-    totalLoaned: loans.reduce((sum, loan) => sum + loan.loanAmount, 0),
+    totalLoaned: loans.reduce((sum, loan) => sum + (typeof loan.loanAmount === 'number' ? loan.loanAmount : 0), 0),
     activeLoans: loans.filter(loan => loan.status === 'Active').length,
-    totalOutstanding: loans.reduce((sum, loan) => sum + loan.currentBalance, 0),
-    avgHealthScore: Math.round(loans.filter(loan => loan.status === 'Active').reduce((sum, loan) => sum + loan.healthScore, 0) / loans.filter(loan => loan.status === 'Active').length)
+    totalOutstanding: loans.reduce((sum, loan) => sum + (typeof loan.currentBalance === 'number' ? loan.currentBalance : 0), 0),
+    avgHealthScore: 'N/A',
   };
 
   return (
@@ -112,14 +124,14 @@ const LoanHistory = () => {
           <p className="text-muted-foreground">Track your lending portfolio and automated health monitoring</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
-            Export Report
-          </Button>
-          <Button variant="outline" size="sm">
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
-          </Button>
+        <Button variant="outline" size="sm">
+          <Download className="h-4 w-4 mr-2" />
+          Export Report
+        </Button>
+        <Button variant="outline" size="sm" onClick={fetchLoans} disabled={loading}>
+          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          {loading ? 'Refreshing...' : 'Refresh'}
+        </Button>
         </div>
       </div>
 
@@ -189,6 +201,12 @@ const LoanHistory = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
+                {loading && (
+                  <div className="text-center text-muted-foreground py-8">Loading loan history...</div>
+                )}
+                {!loading && loans.length === 0 && (
+                  <div className="text-center text-muted-foreground py-8">No loans found for your address.</div>
+                )}
                 {loans.map((loan) => (
                   <div 
                     key={loan.id}
@@ -199,7 +217,7 @@ const LoanHistory = () => {
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div>
-                        <h4 className="font-semibold">{loan.assetName}</h4>
+                        <h4 className="font-semibold">{loan.assetName} <span className="text-xs text-gray-400">(on-chain)</span></h4>
                         <p className="text-sm text-muted-foreground">ID: {loan.id}</p>
                       </div>
                       <div className="flex items-center gap-2">
@@ -215,19 +233,11 @@ const LoanHistory = () => {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                       <div>
                         <p className="text-muted-foreground">Loan Amount</p>
-                        <p className="font-semibold">${loan.loanAmount.toLocaleString()}</p>
+                        <p className="font-semibold">{loan.loanAmount} AVAX</p>
                       </div>
                       <div>
                         <p className="text-muted-foreground">Outstanding</p>
-                        <p className="font-semibold">${loan.currentBalance.toLocaleString()}</p>
-                      </div>
-                      <div>
-                        <p className="text-muted-foreground">Health Score</p>
-                        <div className="flex items-center gap-2">
-                          <span className={`px-2 py-1 rounded text-xs font-semibold ${getHealthColor(loan.healthScore)}`}>
-                            {loan.healthScore}%
-                          </span>
-                        </div>
+                        <p className="font-semibold">{loan.currentBalance} AVAX</p>
                       </div>
                       <div>
                         <p className="text-muted-foreground">Risk Tier</p>
@@ -252,28 +262,16 @@ const LoanHistory = () => {
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div>
                             <p className="text-muted-foreground">Interest Rate</p>
-                            <p className="font-semibold">{loan.interestRate}% APR</p>
+                            <p className="font-semibold">N/A (on-chain only)</p>
                           </div>
                           <div>
                             <p className="text-muted-foreground">Collateral Ratio</p>
-                            <p className="font-semibold">{loan.collateralRatio}%</p>
+                            <p className="font-semibold">N/A (on-chain only)</p>
                           </div>
-                          {loan.status === 'Active' && (
-                            <>
-                              <div>
-                                <p className="text-muted-foreground">Next Payment</p>
-                                <p className="font-semibold">{loan.nextPayment}</p>
-                              </div>
-                              <div>
-                                <p className="text-muted-foreground">Payment Amount</p>
-                                <p className="font-semibold">${loan.paymentAmount.toLocaleString()}</p>
-                              </div>
-                            </>
-                          )}
                         </div>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <span>Transaction:</span>
-                          <span className="font-mono">{loan.txHash}</span>
+                          <span>Borrower:</span>
+                          <span className="font-mono">{userAddress}</span>
                         </div>
                       </div>
                     )}
