@@ -1,8 +1,12 @@
 # api/score.py
 
+
 from flask import Flask, request, jsonify
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/api/score", methods=["POST"])
 def score():
@@ -23,6 +27,5 @@ def score():
             tier = "C"
 
         return jsonify({"risk_tier": tier})
-    
     except Exception as e:
         return jsonify({"error": str(e)}), 500

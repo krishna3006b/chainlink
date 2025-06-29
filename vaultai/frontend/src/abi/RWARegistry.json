@@ -1,0 +1,4 @@
+[
+  {"inputs":[{"internalType":"string","name":"metadataURI","type":"string"},{"internalType":"uint256","name":"valuationUSD","type":"uint256"}],"name":"registerAsset","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"uint256","name":"assetId","type":"uint256"}],"name":"getAsset","outputs":[{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"owner","type":"address"},{"internalType":"string","name":"metadataURI","type":"string"},{"internalType":"uint256","name":"valuationUSD","type":"uint256"}],"internalType":"struct RWARegistry.Asset","name":"","type":"tuple"}],"stateMutability":"view","type":"function"}
+]

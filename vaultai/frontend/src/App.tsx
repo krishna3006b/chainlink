@@ -1,33 +1,41 @@
-import Navbar from './components/Navbar'
-import Home from './pages/Home'
-import '@rainbow-me/rainbowkit/styles.css'
-import { getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit'
-import { WagmiProvider } from 'wagmi'
-import { mainnet } from 'wagmi/chains'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-const config = getDefaultConfig({
-  appName: 'VaultAI',
-  projectId: '29fa5b8dbe55e7aaa7a0ef6baa46156bx', // Replace with your WalletConnect Project ID
-  chains: [mainnet],
-  ssr: false,
-})
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Layout } from "./components/Layout";
+import Index from "./pages/Index";
+import Tokenization from "./pages/Tokenization";
+import RiskAssessment from "./pages/RiskAssessment";
+import LoanApproval from "./pages/LoanApproval";
+import LoanHistory from "./pages/LoanHistory";
+import Settings from "./pages/Settings";
+import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
-function App() {
-  return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
-          <div className="bg-gray-50 min-h-screen">
-            <Navbar />
-            <Home />
-          </div>
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
-  )
-}
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/tokenization" element={<Tokenization />} />
+            <Route path="/risk-assessment" element={<RiskAssessment />} />
+            <Route path="/loan-approval" element={<LoanApproval />} />
+            <Route path="/history" element={<LoanHistory />} />
+            <Route path="/settings" element={<Settings />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
-export default App
+export default App;

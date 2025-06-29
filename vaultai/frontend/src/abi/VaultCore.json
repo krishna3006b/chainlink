@@ -1,0 +1,4 @@
+[
+  {"inputs":[{"internalType":"uint256","name":"assetId","type":"uint256"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"receiveLoanApproval","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"uint256","name":"loanId","type":"uint256"}],"name":"loans","outputs":[{"internalType":"address","name":"borrower","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"bool","name":"repaid","type":"bool"},{"internalType":"uint8","name":"riskTier","type":"uint8"}],"stateMutability":"view","type":"function"}
+]
