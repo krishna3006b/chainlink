@@ -1,49 +1,110 @@
-# VaultAI Protocol
+🚀 CoreVault Protocol
+The Future of Private Credit — AI-Native · Cross-Chain · RWA-Powered
 
-## Overview
-VaultAI is a cross-chain RWA lending protocol leveraging Chainlink Automation, CCIP, and AI-based risk management. It supports Avalanche Fuji and Ethereum Sepolia testnets.
+🏁 Submission for Chromion: A Chainlink Hackathon
+Targeting: Onchain Finance · Grand Prize · Avalanche · ElizaOS · AWS Bedrock
 
-## Deployed Contracts
+VaultAI Protocol enables lending against tokenized real-world assets (RWAs) using AI-based risk scoring and full-stack Chainlink infrastructure — including CCIP, Automation, Functions, VRF, and Data Feeds. Designed for predictive liquidation protection, fair risk exposure, and seamless cross-chain credit flows.
 
-### Avalanche Fuji
-- VaultCore: [ADDRESS_HERE]
-- AIRiskManager: [ADDRESS_HERE]
 
-### Ethereum Sepolia
-- RWARegistry: [ADDRESS_HERE]
-- MockRealEstate: [ADDRESS_HERE]
-- CCIPRouter: [ADDRESS_HERE]
+📦 Deployed Contracts
 
-## Features
-- RWA asset registration and NFT minting (Sepolia)
-- Lending, risk scoring, loan approval, health check, and liquidation (Fuji)
-- Cross-chain messaging simulation (CCIP)
-- Chainlink Automation for loan health and liquidation (both chains)
-- Liquidation event display scripts
-- (Optional) USDC/USD price feed support
-- (Optional) Foundry-based Solidity tests
+| Contract      | Network          | Address                                    |
+| ------------- | ---------------- | ------------------------------------------ |
+| AIRiskManager | Avalanche Fuji   | 0xDc1Fd6267FB58A2c91B00ac4187fCd819Bf93bCb |
+| VaultCore     | Avalanche Fuji   | 0x454A4226aB2Eee18d747D146f10cB432c2Cf9a67 |
+| CCIPRouter    | Avalanche Fuji   | 0xfa0DA9602CFfe09e2860caa7ec01b94b0aDd4458 |
+| RWARegistry   | Ethereum Sepolia | 0xDc1Fd6267FB58A2c91B00ac4187fCd819Bf93bCb |
+| MockRWA       | Fuji/Sepolia     | 0x454A4226aB2Eee18d747D146f10cB432c2Cf9a67 |
 
-## Demo Steps
-1. Deploy contracts using Hardhat scripts.
-2. Register RWA and mint NFT on Sepolia.
-3. Lend and test risk scoring on Fuji.
-4. Simulate unhealthy loans and trigger liquidation via Chainlink Automation.
-5. Use scripts to display recent liquidations.
-6. (Optional) Run Foundry tests: `forge test`
+🛠️ Chainlink Services Used
 
-## Scripts
-- `deploy.js`, `deploy-registry.js`, `deploy-mockRWA.js`: Deployment
-- `test-vaultcore.js`, `test-unhealthy-loan.js`, `test-unhealthy-loan-sepolia.js`: Testing
-- `manual-upkeep.js`, `manual-upkeep-sepolia.js`: Manual Automation
-- `show-liquidations.js`, `show-liquidations-sepolia.js`: Liquidation events
-- `ccip-demo.js`, `ccip-send-sepolia.js`, `ccip-receive-fuji.js`: Cross-chain messaging
+| Service              | Purpose                                         |
+| -------------------- | ----------------------------------------------- |
+| Chainlink CCIP       | Cross-chain loan transfer & messaging           |
+| Chainlink Automation | Liquidation health check and execution triggers |
+| Chainlink Functions  | AI-based off-chain risk scoring via AWS Lambda  |
+| Chainlink Data Feeds | Price feeds (ETH/USD, USDC/USD)                 |
+| Chainlink VRF        | Randomized borrower audit selection             |
 
-## Addresses
-Replace [ADDRESS_HERE] with actual deployed addresses.
+💡 How It Works
 
-## Requirements
-- Node.js, Hardhat, Foundry, dotenv
-- Funded testnet wallets and LINK for Automation
+1. User tokenizes an RWA on Ethereum Sepolia via RWARegistry
+2. Chainlink Functions calls an AWS Lambda AI model to generate a risk score
+3. If risk tier ≥ B, a loan is approved and issued from VaultCore on Avalanche
+4. Cross-chain messaging handled via Chainlink CCIP
+5. Chainlink Automation monitors health factor for liquidations
+6. Chainlink VRF randomly selects addresses for audit checks
 
-## Contact
-For questions, contact the VaultAI team.
+🧪 How to Run Locally
+
+1. Clone repo and install deps:
+
+   ```bash
+   git clone https://github.com/your-org/vaultai-protocol
+   cd vaultai-protocol
+   npm install
+   ```
+2. Set up .env with RPCs and private key
+3. Deploy contracts via Hardhat
+
+   ```bash
+   npx hardhat deploy --network fuji
+   ```
+4. Start frontend (optional):
+
+   ```bash
+   cd frontend && npm run dev
+   ```
+
+🎯 Tracks Targeted
+
+* ✅ Chainlink Onchain Finance — RWA tokenization + AI lending
+* ✅ Chainlink Grand Prize — advanced Chainlink stack usage
+* ✅ Avalanche Track — primary deployment on Fuji C-Chain
+* ✅ ElizaOS — multi-agent AI orchestration for DeFi
+* ✅ AWS x Bedrock — Lambda + AI scoring + Chainlink Functions
+
+🧱 Repo Structure
+
+| Folder     | Purpose                                |
+| ---------- | -------------------------------------- |
+| /contracts | All Solidity contracts (Hardhat-ready) |
+| /frontend  | React + Wagmi UI for borrower flows    |
+| /aws       | AWS Lambda AI risk model + API route   |
+
+⚙️ Tech Stack
+
+* Solidity (0.8.x), Hardhat, OpenZeppelin
+* Chainlink CCIP, Automation, VRF, Data Feeds, Functions
+* React + TypeScript + TailwindCSS + Wagmi
+* AWS Lambda + Python for AI
+* PostgreSQL (optional) for off-chain analytics
+
+🤖 AI Risk Engine
+
+* Inputs: creditScore, income, assetValue (JSON)
+* Hosted as AWS Lambda
+* Returns A/B/C risk tier to VaultCore via Chainlink Functions
+* Risk tier used for loan approval & interest rate
+
+🔐 Security & Compliance Simulation
+
+* KYC placeholder on frontend
+* Role-based access for contract actions
+* Audit log via contract events
+* Randomized audit sample via VRF
+
+🎨 Architecture Overview
+
+```mermaid
+graph TD;
+  A[RWA Owner] -->|Tokenize| B(RWARegistry on Sepolia)
+  B -->|AssetID| C[AIRiskManager via Chainlink Functions]
+  C -->|Risk Tier| D[VaultCore on Fuji]
+  D -->|Loan USDC| E[Borrower Wallet]
+  D -->|Health Factor| F[Automation Trigger]
+  D -->|Random Address| G[Chainlink VRF Audit]
+```
+
+
