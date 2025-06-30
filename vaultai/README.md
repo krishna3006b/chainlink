@@ -6,6 +6,9 @@ Targeting: Onchain Finance · Grand Prize · Avalanche · ElizaOS · AWS Bedrock
 
 VaultAI Protocol enables lending against tokenized real-world assets (RWAs) using AI-based risk scoring and full-stack Chainlink infrastructure — including CCIP, Automation, Functions, VRF, and Data Feeds. Designed for predictive liquidation protection, fair risk exposure, and seamless cross-chain credit flows.
 
+## 📊 Pitch Deck
+
+👉 [View Presentation](https://drive.google.com/file/d/17KYglePYp3Muf8dYQAHLGkqQC_qzYoi0/view?usp=sharing)
 
 📦 Deployed Contracts
 
@@ -15,7 +18,6 @@ VaultAI Protocol enables lending against tokenized real-world assets (RWAs) usin
 | VaultCore     | Avalanche Fuji   | 0x454A4226aB2Eee18d747D146f10cB432c2Cf9a67 |
 | CCIPRouter    | Avalanche Fuji   | 0xfa0DA9602CFfe09e2860caa7ec01b94b0aDd4458 |
 | RWARegistry   | Ethereum Sepolia | 0xDc1Fd6267FB58A2c91B00ac4187fCd819Bf93bCb |
-| MockRWA       | Fuji/Sepolia     | 0x454A4226aB2Eee18d747D146f10cB432c2Cf9a67 |
 
 🛠️ Chainlink Services Used
 
